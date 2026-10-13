@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0c0a0b">
+<title>Think</title>
+<style>
+:root{--bg:#0c0a0b;--panel:#151112;--panel2:#1e1819;--line:#2b2224;--bubble:#6d0f2b;--bubble2:#931a40;--accent:#d03a69;--text:#f5eeef;--muted:#9d9094;--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+[data-theme=gece]{--bg:#080b12;--panel:#0f1420;--panel2:#161d2e;--line:#222b41;--bubble:#1c3573;--bubble2:#2a4fa6;--accent:#5b8cff;--text:#eef2fb;--muted:#8792a9}
+[data-theme=zumrut]{--bg:#070f0c;--panel:#0d1713;--panel2:#13211b;--line:#1f3029;--bubble:#0d4f3b;--bubble2:#14735a;--accent:#2fd19a;--text:#eef8f4;--muted:#8aa398}
+[data-theme=mor]{--bg:#0e0912;--panel:#171020;--panel2:#20162d;--line:#31223f;--bubble:#4f1b78;--bubble2:#7330a8;--accent:#b570ff;--text:#f6effb;--muted:#a393b3}
+[data-theme=altin]{--bg:#0b0a08;--panel:#15130f;--panel2:#1e1b15;--line:#2f2a20;--bubble:#5c4716;--bubble2:#86672a;--accent:#e0b556;--text:#f8f3e8;--muted:#a69d88}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;overflow:hidden}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+.hidden{display:none!important}
+#app{position:fixed;inset:0}
+.view{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--bg)}
+.top{display:flex;align-items:center;gap:10px;padding:calc(var(--st) + 10px) 12px 10px;background:linear-gradient(180deg,var(--panel),var(--bg));border-bottom:1px solid var(--line);flex:none}
+.top h1{margin:0;font-size:26px;letter-spacing:.5px;font-weight:700;flex:1;padding-left:6px}
+.ib{width:42px;height:42px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);font-size:20px;display:grid;place-items:center;flex:none}
+.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.av{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--bubble2),var(--bubble));display:grid;place-items:center;font-size:25px;flex:none;box-shadow:0 0 0 1px var(--line)}
+.top .av{width:40px;height:40px;font-size:20px}
+.ttl{flex:1;font-weight:600;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line);user-select:none}
+.ci:active{background:var(--panel)}
+.ci .mid{flex:1;min-width:0}
+.ci .nm{font-weight:600;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci .pv{color:var(--muted);font-size:14px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ci .rt{text-align:right;font-size:12px;color:var(--muted);flex:none}
+.ci .bd{display:inline-block;margin-top:6px;min-width:22px;padding:2px 7px;border-radius:11px;background:var(--bubble2);color:#fff;font-size:12px}
+.empty{padding:60px 32px;text-align:center;color:var(--muted);line-height:1.6}
+.empty b{display:block;color:var(--text);font-size:18px;margin-bottom:6px}
+#fab{position:absolute;right:20px;bottom:calc(var(--sb) + 24px);width:62px;height:62px;border-radius:22px;background:linear-gradient(135deg,var(--bubble2),var(--bubble));color:#fff;font-size:34px;display:grid;place-items:center;box-shadow:0 10px 30px -6px var(--bubble2),0 0 0 1px rgba(255,255,255,.08) inset}
+#msgs{padding:12px 10px 16px;display:flex;flex-direction:column;gap:6px;background:radial-gradient(circle at 15% 0%,color-mix(in srgb,var(--accent) 14%,transparent),transparent 55%),var(--bg)}
+.sep{align-self:center;margin:8px 0 4px;padding:4px 12px;border-radius:12px;background:var(--panel2);color:var(--muted);font-size:12px}
+.bub{align-self:flex-end;max-width:86%;background:linear-gradient(135deg,var(--bubble2),var(--bubble));color:#fff;padding:9px 13px 6px;border-radius:19px 19px 5px 19px;position:relative;word-break:break-word;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;box-shadow:0 4px 14px -6px #000}
+.bub.sel{box-shadow:0 0 0 3px var(--accent)}
+.bub .tx{white-space:pre-wrap;font-size:16px;line-height:1.4}
+.bub .tx a{color:#fff;text-decoration:underline;text-underline-offset:3px}
+.bub .tm{font-size:11px;opacity:.65;text-align:right;margin-top:3px}
+.bub.media{padding:4px 4px 3px;width:min(74vw,330px)}
+.bub.media .tm{padding-right:8px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.grid.n1{grid-template-columns:1fr}
+.tile{position:relative;overflow:hidden;border-radius:15px;background:#000;aspect-ratio:1}
+.tile.wide{grid-column:span 2;aspect-ratio:2/1}
+.grid.n1 .tile{aspect-ratio:auto}
+.tile img,.tile video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.grid.n1 .tile img,.grid.n1 .tile video{height:auto;max-height:380px;min-height:140px}
+.play{position:absolute;left:50%;top:50%;width:48px;height:48px;margin:-24px 0 0 -24px;border-radius:50%;background:rgba(0,0,0,.55);display:grid;place-items:center;font-size:18px;padding-left:3px;backdrop-filter:blur(4px)}
+.chk{position:absolute;top:7px;right:7px;width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:rgba(0,0,0,.25);display:none;place-items:center;font-size:14px}
+.selmode .tile .chk{display:grid}
+.tile.sel .chk{background:var(--accent);border-color:var(--accent)}
+.tile.sel img,.tile.sel video{filter:brightness(.65)}
+.file{display:flex;align-items:center;gap:12px;min-width:200px}
+.file .fi{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.16);display:grid;place-items:center;font-size:22px;flex:none}
+.file .fn{font-size:15px;font-weight:600;word-break:break-all}
+.file .fs{font-size:12px;opacity:.7}
+#comp{display:flex;align-items:flex-end;gap:8px;padding:8px 10px calc(var(--sb) + 8px);background:var(--panel);border-top:1px solid var(--line);flex:none}
+#ta{flex:1;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:23px;padding:11px 16px;font:inherit;font-size:16px;max-height:140px;resize:none;outline:none;line-height:1.35}
+#ta:focus{border-color:var(--bubble2)}
+.rb{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:22px}
+#bAtt{background:var(--panel2);border:1px solid var(--line)}
+#bSend{background:linear-gradient(135deg,var(--bubble2),var(--bubble));color:#fff}
+.sc{padding:16px}
+.sc h2{font-size:14px;color:var(--muted);font-weight:500;margin:6px 4px 12px}
+.th{display:flex;align-items:center;gap:14px;padding:14px;border-radius:18px;background:var(--panel);border:1px solid var(--line);margin-bottom:10px;width:100%;text-align:left}
+.th.on{border-color:var(--accent)}
+.sw{width:38px;height:38px;border-radius:12px;flex:none}
+.th span.n{flex:1;font-size:16px}
+.info{color:var(--muted);font-size:14px;line-height:1.6;padding:8px 4px}
+#viewer{position:fixed;inset:0;background:#000;z-index:50}
+#stage{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;touch-action:none;overflow:hidden}
+#stage img{max-width:100%;max-height:100%;transform-origin:center;will-change:transform;user-select:none;-webkit-user-drag:none}
+#stage video{max-width:100%;max-height:100%;width:100%}
+.vbar{position:absolute;left:0;right:0;display:flex;align-items:center;gap:10px;padding:calc(var(--st) + 10px) 12px 24px;background:linear-gradient(180deg,rgba(0,0,0,.7),transparent);z-index:2;pointer-events:none}
+.vbar>*{pointer-events:auto}
+.vbar .ct{flex:1;text-align:center;font-size:15px;opacity:.85}
+.vb{position:absolute;top:50%;margin-top:-26px;width:44px;height:52px;display:grid;place-items:center;font-size:30px;background:rgba(0,0,0,.35);color:#fff;z-index:2;border-radius:14px}
+#vPrev{left:6px}#vNext{right:6px}
+#sheetWrap{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:60;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px)}
+#sheet{width:100%;max-width:520px;background:var(--panel);border-radius:26px 26px 0 0;padding:14px 14px calc(var(--sb) + 14px);border:1px solid var(--line);border-bottom:0}
+#sheet .sh{color:var(--muted);font-size:13px;text-align:center;margin:2px 0 10px}
+.so{display:block;width:100%;text-align:left;padding:15px 16px;border-radius:16px;font-size:17px;background:var(--panel2);margin-bottom:8px}
+.so.dg{color:#ff6b7f}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:70;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)}
+#mbox{width:100%;max-width:420px;background:var(--panel);border:1px solid var(--line);border-radius:26px;padding:20px}
+#mbox h3{margin:0 0 14px;font-size:20px}
+#mbox input{width:100%;background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:14px 16px;font-size:17px;outline:none}
+#mbox input:focus{border-color:var(--bubble2)}
+.em{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin:14px 0}
+.em button{aspect-ratio:1;border-radius:12px;font-size:22px;background:var(--panel2)}
+.em button.on{background:var(--bubble);box-shadow:0 0 0 2px var(--accent)}
+.mb{display:flex;gap:10px}
+.mb button{flex:1;padding:14px;border-radius:16px;font-size:16px;background:var(--panel2)}
+.mb button.pr{background:linear-gradient(135deg,var(--bubble2),var(--bubble));color:#fff;font-weight:600}
+#toast{position:fixed;left:50%;bottom:calc(var(--sb) + 90px);transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line);padding:11px 18px;border-radius:20px;font-size:14px;z-index:80;max-width:86%;text-align:center}
+</style>
+</head>
+<body>
+<div id="app">
+  <section id="vList" class="view">
+    <header class="top"><h1>Think</h1><button class="ib" id="bSet">⚙</button></header>
+    <div id="chatList" class="scroll"></div>
+    <button id="fab">+</button>
+  </section>
+
+  <section id="vChat" class="view hidden">
+    <header class="top" id="chatTop">
+      <button class="ib" id="bBack">‹</button>
+      <div class="av" id="chatAv"></div>
+      <div class="ttl" id="chatTtl"></div>
+      <button class="ib" id="bMore">⋮</button>
+    </header>
+    <header class="top hidden" id="selTop">
+      <button class="ib" id="sCancel">✕</button>
+      <div class="ttl" id="sCnt"></div>
+      <button class="ib" id="sCopy">⧉</button>
+      <button class="ib" id="sDel">🗑</button>
+    </header>
+    <div id="msgs" class="scroll"></div>
+    <div id="comp">
+      <button class="rb" id="bAtt">＋</button>
+      <textarea id="ta" rows="1" placeholder="Not yaz, link yapıştır…"></textarea>
+      <button class="rb" id="bSend">➤</button>
+    </div>
+  </section>
+
+  <section id="vSet" class="view hidden">
+    <header class="top"><button class="ib" id="setBack">‹</button><h1>Ayarlar</h1></header>
+    <div class="scroll sc">
+      <h2>Renk teması</h2>
+      <div id="themes"></div>
+      <h2>Depolama</h2>
+      <div class="info" id="stor">Her şey sadece bu telefonda saklanır. Hiçbir şey otomatik silinmez.</div>
+    </div>
+  </section>
+</div>
+
+<div id="viewer" class="hidden">
+  <div class="vbar"><button class="ib" id="vClose">✕</button><div class="ct" id="vCt"></div><button class="ib" id="vDel">🗑</button></div>
+  <div id="stage"></div>
+  <button class="vb" id="vPrev">‹</button><button class="vb" id="vNext">›</button>
+</div>
+<div id="sheetWrap" class="hidden"><div id="sheet"></div></div>
+<div id="modal" class="hidden"><div id="mbox"></div></div>
+<div id="toast" class="hidden"></div>
+<input type="file" id="fMedia" accept="image/*,video/*" multiple hidden>
+<input type="file" id="fAny" multiple hidden>
+
+<script>
+const $=s=>document.querySelector(s);
+const E=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const fmtSize=n=>n<1024?n+' B':n<1048576?(n/1024).toFixed(0)+' KB':n<1073741824?(n/1048576).toFixed(1)+' MB':(n/1073741824).toFixed(2)+' GB';
+const timeF=t=>new Date(t).toLocaleTimeString('tr-TR',{hour:'2-digit',minute:'2-digit'});
+const dayF=t=>new Date(t).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'});
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(tt);tt=setTimeout(()=>t.classList.add('hidden'),2200)}
+
+/* ---------- veritabanı ---------- */
+let db;
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('think',1);
+ r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('chats',{keyPath:'id'});d.createObjectStore('items',{keyPath:'id'}).createIndex('chat','chatId')};
+ r.onsuccess=()=>{db=r.result;res()};r.onerror=()=>rej(r.error)})}
+function tx(store,mode,fn){return new Promise((res,rej)=>{const t=db.transaction(store,mode);const s=t.objectStore(store);let out;const q=fn(s);if(q)q.onsuccess=()=>out=q.result;t.oncomplete=()=>res(out);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})}
+const getAll=s=>tx(s,'readonly',o=>o.getAll());
+const put=(s,v)=>tx(s,'readwrite',o=>o.put(v));
+const putMany=(s,a)=>tx(s,'readwrite',o=>{a.forEach(x=>o.put(x))});
+const delMany=(s,a)=>tx(s,'readwrite',o=>{a.forEach(x=>o.delete(x))});
+const itemsOf=c=>tx('items','readonly',o=>o.index('chat').getAll(c));
+
+/* ---------- durum ---------- */
+let chats=[],cur=null,items=[],sel=new Set(),urls=new Map(),ml=[],vi=0,vOpen=false;
+const byId=id=>items.find(i=>i.id===id);
+const isMedia=i=>i.type==='image'||i.type==='video';
+function urlOf(it){let u=urls.get(it.id);if(!u){u=URL.createObjectURL(it.blob);urls.set(it.id,u)}return u}
+function revokeAll(){urls.forEach(u=>URL.revokeObjectURL(u));urls.clear()}
+function view(n){['vList','vChat','vSet'].forEach(v=>$('#'+v).classList.toggle('hidden',v!==n))}
+
+/* ---------- tema ---------- */
+const THEMES=[['visne','Vişne','#931a40'],['gece','Gece mavisi','#2a4fa6'],['zumrut','Zümrüt','#14735a'],['mor','Ametist','#7330a8'],['altin','Antik altın','#86672a']];
+function setTheme(t){if(t==='visne')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem('theme',t)}catch(e){}}
+setTheme((()=>{try{return localStorage.getItem('theme')||'visne'}catch(e){return 'visne'}})());
+
+/* ---------- sohbet listesi ---------- */
+async function showList(){
+ view('vList');revokeAll();cur=null;clearSelQuiet();
+ const [cs,its]=await Promise.all([getAll('chats'),getAll('items')]);
+ const by={};its.forEach(i=>{(by[i.chatId]=by[i.chatId]||[]).push(i)});
+ cs.forEach(c=>{const a=by[c.id]||[];c.n=a.length;c.last=a.sort((x,y)=>y.ts-x.ts)[0];c.t=c.last?c.last.ts:c.created});
+ cs.sort((a,b)=>b.t-a.t);chats=cs;
+ const L=$('#chatList');L.innerHTML='';
+ if(!cs.length){L.innerHTML='<div class="empty"><b>Henüz sohbet yok</b>Sağ alttaki + ile ilk sohbetini oluştur. Örneğin “İngilizce”, “Linkler”, “Dosyalar”.</div>';return}
+ cs.forEach(c=>{
+  const pv=!c.last?'Boş':c.last.type==='text'?c.last.text.replace(/\n/g,' '):c.last.type==='image'?'📷 Fotoğraf':c.last.type==='video'?'🎬 Video':'📄 '+c.last.name;
+  const d=E('div','ci');d.dataset.cid=c.id;
+  d.innerHTML='<div class="av">'+esc(c.emoji||'📝')+'</div><div class="mid"><div class="nm">'+esc(c.name)+'</div><div class="pv">'+esc(pv)+'</div></div><div class="rt">'+(c.last?timeF(c.t):'')+'<br>'+(c.n?'<span class="bd">'+c.n+'</span>':'')+'</div>';
+  let p,lf=false;
+  d.addEventListener('touchstart',()=>{lf=false;p=setTimeout(()=>{lf=true;chatSheet(c)},500)},{passive:true});
+  ['touchend','touchmove','touchcancel'].forEach(n=>d.addEventListener(n,()=>clearTimeout(p),{passive:true}));
+  d.addEventListener('contextmenu',e=>e.preventDefault());
+  d.addEventListener('click',()=>{if(lf){lf=false;return}openChat(c.id)});
+  L.appendChild(d)});
+}
+function chatSheet(c){sheet(c.name,[{label:'✏️  Adı ve simgeyi değiştir',fn:()=>chatForm(c)},{label:'🗑  Sohbeti sil',danger:1,fn:()=>deleteChat(c)}])}
+async function deleteChat(c){
+ if(!confirm('“'+c.name+'” sohbeti ve içindeki her şey silinsin mi? Bu geri alınamaz.'))return;
+ await tx('items','readwrite',s=>{const r=s.index('chat').openKeyCursor(IDBKeyRange.only(c.id));r.onsuccess=()=>{const k=r.result;if(k){s.delete(k.primaryKey);k.continue()}}});
+ await delMany('chats',[c.id]);
+ if(cur){history.back()}else showList();
+}
+
+/* ---------- yeni / düzenle sohbet ---------- */
+const EMOJIS=['📝','📚','🎓','💡','🔗','🎬','📷','📁','💼','🧠','🌍','⭐','🎵','🛒','💬','🔒'];
+function chatForm(c){
+ let em=c?c.emoji:EMOJIS[0];
+ const b=$('#mbox');b.innerHTML='<h3>'+(c?'Sohbeti düzenle':'Yeni sohbet')+'</h3><input id="mName" maxlength="40" placeholder="Sohbet adı (ör. İngilizce notları)"><div class="em"></div><div class="mb"><button id="mNo">Vazgeç</button><button class="pr" id="mOk">'+(c?'Kaydet':'Oluştur')+'</button></div>';
+ $('#mName').value=c?c.name:'';
+ const g=b.querySelector('.em');
+ EMOJIS.forEach(x=>{const q=E('button',x===em?'on':'',x);q.onclick=()=>{em=x;g.querySelectorAll('button').forEach(z=>z.classList.toggle('on',z===q))};g.appendChild(q)});
+ $('#mNo').onclick=()=>$('#modal').classList.add('hidden');
+ $('#mOk').onclick=async()=>{
+  const n=$('#mName').value.trim();if(!n){toast('Bir ad yaz');return}
+  $('#modal').classList.add('hidden');
+  if(c){c.name=n;c.emoji=em;const o={id:c.id,name:n,emoji:em,created:c.created};await put('chats',o);if(cur&&cur.id===c.id){cur=o;chatHeader()}else showList()}
+  else{const o={id:uid(),name:n,emoji:em,created:Date.now()};await put('chats',o);openChat(o.id)}
+ };
+ $('#modal').classList.remove('hidden');setTimeout(()=>$('#mName').focus(),100);
+}
+
+/* ---------- sohbet ekranı ---------- */
+function chatHeader(){$('#chatTtl').textContent=cur.name;$('#chatAv').textContent=cur.emoji||'📝'}
+async function openChat(id){
+ const c=(await getAll('chats')).find(x=>x.id===id);if(!c)return;
+ cur=c;items=(await itemsOf(id)).sort((a,b)=>a.ts-b.ts);
+ sel.clear();updSel();view('vChat');chatHeader();renderMsgs(true);
+ history.pushState({v:'chat'},'');
+}
+function groups(){const g=[];for(const it of items){const m=isMedia(it);const l=g[g.length-1];if(m&&l&&l.media&&it.batch&&l.batch===it.batch)l.list.push(it);else g.push({media:m,batch:it.batch,list:[it]})}return g}
+function tile(it){
+ const t=E('div','tile');t.dataset.id=it.id;const u=urlOf(it);
+ if(it.type==='image'){const im=E('img');im.src=u;im.loading='lazy';im.draggable=false;t.appendChild(im)}
+ else{const v=E('video');v.src=u+'#t=0.1';v.preload='metadata';v.muted=true;v.playsInline=true;t.appendChild(v);t.appendChild(E('div','play','▶'))}
+ t.appendChild(E('div','chk','✓'));
+ if(sel.has(it.id))t.classList.add('sel');return t}
+function linkify(s){return esc(s).replace(/(https?:\/\/[^\s<]+|www\.[^\s<]+)/gi,m=>{const h=m.startsWith('www.')?'https://'+m:m;return '<a href="'+h+'" target="_blank" rel="noopener">'+m+'</a>'})}
+function renderMsgs(scroll){
+ const M=$('#msgs');const keep=M.scrollTop;M.innerHTML='';
+ if(!items.length){M.innerHTML='<div class="empty"><b>Burası boş</b>Not yaz, link yapıştır ya da ＋ ile fotoğraf, video ve dosya ekle.</div>'}
+ let last='';
+ for(const g of groups()){
+  const f=g.list[0];const d=dayF(f.ts);if(d!==last){M.appendChild(E('div','sep',d));last=d}
+  const b=E('div','bub'+(g.media?' media':''));
+  if(g.media){
+   const gr=E('div','grid n'+(g.list.length===1?1:2));
+   g.list.forEach(it=>gr.appendChild(tile(it)));
+   if(g.list.length>1&&g.list.length%2===1)gr.firstChild.classList.add('wide');
+   b.appendChild(gr)}
+  else{b.dataset.id=f.id;if(sel.has(f.id))b.classList.add('sel');
+   if(f.type==='text')b.appendChild(E('div','tx',linkify(f.text)));
+   else b.appendChild(E('div','file','<div class="fi">📄</div><div><div class="fn">'+esc(f.name||'Dosya')+'</div><div class="fs">'+fmtSize(f.size||0)+'</div></div>'))}
+  b.appendChild(E('div','tm',timeF(g.list[g.list.length-1].ts)));
+  M.appendChild(b)}
+ if(scroll)M.scrollTop=M.scrollHeight;else M.scrollTop=keep;
+}
+async function send(){
+ const v=$('#ta').value.trim();if
