@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0c0a0b">
+<title>Think</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <section id="vList" class="view">
+    <header class="top"><h1>Think</h1><button class="ib" id="bSet">⚙</button></header>
+    <div id="chatList" class="scroll"></div>
+    <button id="fab">+</button>
+  </section>
+
+  <section id="vChat" class="view hidden">
+    <header class="top" id="chatTop">
+      <button class="ib" id="bBack">‹</button>
+      <div class="av" id="chatAv"></div>
+      <div class="ttl" id="chatTtl"></div>
+      <button class="ib" id="bMore">⋮</button>
+    </header>
+    <header class="top hidden" id="selTop">
+      <button class="ib" id="sCancel">✕</button>
+      <div class="ttl" id="sCnt"></div>
+      <button class="ib" id="sCopy">⧉</button>
+      <button class="ib" id="sDel">🗑</button>
+    </header>
+    <div id="msgs" class="scroll"></div>
+    <div id="comp">
+      <button class="rb" id="bAtt">＋</button>
+      <textarea id="ta" rows="1" placeholder="Not yaz, link yapıştır…"></textarea>
+      <button class="rb" id="bSend">➤</button>
+    </div>
+  </section>
+
+  <section id="vSet" class="view hidden">
+    <header class="top"><button class="ib" id="setBack">‹</button><h1>Ayarlar</h1></header>
+    <div class="scroll sc">
+      <h2>Renk teması</h2>
+      <div id="themes"></div>
+      <h2>Depolama</h2>
+      <div class="info" id="stor">Her şey sadece bu telefonda saklanır. Hiçbir şey otomatik silinmez.</div>
+    </div>
+  </section>
+</div>
+
+<div id="viewer" class="hidden">
+  <div class="vbar"><button class="ib" id="vClose">✕</button><div class="ct" id="vCt"></div><button class="ib" id="vDel">🗑</button></div>
+  <div id="stage"></div>
+  <button class="vb" id="vPrev">‹</button><button class="vb" id="vNext">›</button>
+</div>
+<div id="sheetWrap" class="hidden"><div id="sheet"></div></div>
+<div id="modal" class="hidden"><div id="mbox"></div></div>
+<div id="toast" class="hidden"></div>
+<input type="file" id="fMedia" accept="image/*,video/*" multiple hidden>
+<input type="file" id="fAny" multiple hidden>
+
+<script>window.addEventListener('error',function(e){var d=document.createElement('div');d.style.cssText='position:fixed;left:8px;right:8px;top:60px;z-index:999;background:#400;color:#fff;padding:10px;border-radius:10px;font:12px monospace';d.textContent='Hata: '+e.message+' ('+(e.filename||'').split('/').pop()+':'+e.lineno+')';document.body.appendChild(d)});</script>
+<script src="app1.js"></script>
+<script src="app2.js"></script>
+</body>
+</html>
