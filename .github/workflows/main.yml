@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -17,7 +17,7 @@ jobs:
       - name: Build
         run: |
           mkdir -p www
-          cp index.html www/
+          cp index.html style.css app1.js app2.js www/
           npm init -y
           npm i @capacitor/core @capacitor/cli @capacitor/android
           npx cap init Think com.brusk.think --web-dir www
